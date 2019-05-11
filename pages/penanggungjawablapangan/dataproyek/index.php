@@ -79,38 +79,46 @@ $active = ['','active','','','','','',''];
            <div class="clearfix"></div>
          </div>
          <div class="x_content">
-           <table id="datatable" class="table table-striped table-bordered">
+           <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
              <thead>
                <tr>
                  <th>No</th>
                  <th>Nama Proyek</th>
-                 <th>Pemilik Proyek</th>
+                 <th>Nama Klien</th>
                  <th>Nomor SPK</th>
                  <th>Nilai SPK</th>
-                 <th>Tanggal Mulai</th>
-                 <th>Tanggal Selesai</th>
-                 <th>Durasi</th>
+                 <th>Tanggal Proyek</th>
                  <th>Status</th>
-                 <th>Keterangan</th>
+                 <th>Action</th>
+                 <th class="none">Tanggal Mulai</th>
+                 <th class="none">Tanggal Selesai</th>
+                 <th class="none">Keterangan</th>
                </tr>
              </thead>
              <tbody>
                <?php
-                  $sql = "select * from proyek";
+                  $sql = "select * from proyek inner join klien on klien.id = proyek.id_klien";
                   $result = mysqli_query($conn, $sql);
-                  $i = 0;
+                  $i = 1;
                   while ($row = mysqli_fetch_array($result)) {
                 ?>
                <tr>
                  <td><?php echo $i++; ?></td>
                  <td><?php echo $row['nama_proyek']; ?></td>
-                 <td><?php echo $row['pemilik_proyek']; ?></td>
-                 <td><?php echo $row['no_spk']; ?></td>
+                 <td><?php echo $row['nama']; ?></td>
+                 <td><?php echo $row['no_kontrak']; ?></td>
                  <td><?php echo $row['nilai_kontrak']; ?></td>
-                 <td><?php echo $row['tanggal_mulai']; ?></td>
-                 <td><?php echo $row['tanggal_selesai']; ?></td>
-                 <td><?php echo $row['durasi']; ?></td>
-                 <td><?php echo $row['status']; ?></td>
+                 <td><?php echo $row['tgl_kontrak']; ?></td>
+                 <td>
+                   <?php if($row['status']){
+                     echo "<p class='alert-success text-center' style='padding:9px'>Waiting</p>";
+                   } ?>
+                 </td>
+                 <td>
+                   <a href="pekerjaan?id=<?php echo $row['id']; ?>"><button class="brn btn-warning form-control">Pekerjaan</button></a>
+                 </td>
+                 <td><?php echo $row['tgl_mulai']; ?></td>
+                 <td><?php echo $row['tgl_selesai']; ?></td>
                  <td><?php echo $row['keterangan']; ?></td>
                </tr>
              <?php } ?>

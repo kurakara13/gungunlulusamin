@@ -6,11 +6,17 @@ $active = ['','active','','','','','',''];
 
 <?php function css($lvl){ ?>
 
+  <!-- bootstrap-daterangepicker -->
+  <link href="<?php echo $lvl?>assets/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
 <?php } ?>
 
 <?php function script($lvl){ ?>
   <!-- validator -->
   <script src="<?php echo $lvl?>assets/vendors/validator/validator.js"></script>
+  <!-- bootstrap-daterangepicker -->
+  <script src="<?php echo $lvl?>assets/vendors/moment/min/moment.min.js"></script>
+  <script src="<?php echo $lvl?>assets/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
 
 <?php } ?>
 
@@ -59,8 +65,9 @@ $active = ['','active','','','','','',''];
         </div>
         <div class="x_content">
 
-          <form class="form-horizontal form-label-left" novalidate action="<?php echo $lvl?>functions/tambah_data.php" method="post">
-            <input type="hidden" name="page" value="tambah_proyek">
+          <form class="form-horizontal form-label-left" novalidate action="../../functions/tambah_data.php" method="post">
+            <input type="hidden" name="page" value="proyek">
+            <input type="hidden" name="function" value="create">
 
             <div class="item form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Proyek <span class="required">*</span>
@@ -70,10 +77,18 @@ $active = ['','active','','','','','',''];
               </div>
             </div>
             <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name_pemilik">Pemilik Proyek <span class="required">*</span>
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Klien <span class="required">*</span>
               </label>
               <div class="col-md-6 col-sm-6 col-xs-12">
-                <input id="name" class="form-control col-md-7 col-xs-12" name="pemilik_proyek" placeholder="Pemilik Proyek" required="required" type="text">
+                <select class="form-control col-md-7 col-xs-12" name="id_klien" required="required">
+                  <option value="">-Pilih Klien-</option>
+                  <?php
+                     $result = mysqli_query($conn, "select * from klien");
+                     while ($row = mysqli_fetch_array($result)) {
+                   ?>
+                   <option value="<?php echo $row['id'] ?>"><?php echo $row['nama'] ?></option>
+                  <?php } ?>
+                </select>
               </div>
             </div>
             <div class="item form-group">
@@ -91,22 +106,19 @@ $active = ['','active','','','','','',''];
               </div>
             </div>
             <div class="item form-group">
-              <label class="control-label col-md-3" for="tgl_mulai">Tanggal Mulai <span class="required">*</span>
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tgl_mulai">Lama Proyek <span class="required">*</span>
               </label>
-              <div class="col-md-2">
-                <input id="name" class="form-control" name="tgl_mulai" required="required" type="date">
-              </div>
-              <label class="control-label col-md-2" for="tgl_selesai">Tanggal Selesai <span class="required">*</span>
-              </label>
-              <div class="col-md-2">
-                <input id="name" class="form-control" name="tgl_selesai" required="required" type="date">
-              </div>
-            </div>
-            <div class="item form-group">
-              <label class="control-label col-md-3" for="durasi">Durasi <span class="required">*</span>
-              </label>
-              <div class="col-md-2">
-                <input id="name" class="form-control" name="durasi" placeholder="Durasi" required="required" type="number">
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <fieldset>
+                  <div class="control-group">
+                    <div class="controls">
+                      <div class="input-prepend input-group">
+                        <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                        <input type="text" style="width: 200px" name="waktu_proyek" id="reservation" class="form-control" value="<?php echo date('m/01/Y'); ?> - <?php echo date('m/25/Y'); ?>" />
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
               </div>
             </div>
             <div class="item form-group">

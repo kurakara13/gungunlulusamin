@@ -27,7 +27,7 @@
 
 
 <!-- Custom Theme Scripts -->
-<script src="<?php echo $lvl?>assets/build/js/custom.min.js"></script>
+<script src="<?php echo $lvl?>assets/build/js/custom.js?v=1"></script>
 
 </body>
 </html>
