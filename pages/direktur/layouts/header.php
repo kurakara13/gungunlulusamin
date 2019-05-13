@@ -71,12 +71,10 @@
                 <ul class="nav side-menu">
                   <li class="<?php echo $active[0]?>"><a href="<?php echo $lvl?>pages/direktur/"><i class="fa fa-home"></i> Dashboard </a></li>
                   <li class="<?php echo $active[1]?>"><a href="<?php echo $lvl?>pages/direktur/dataproyek"><i class="fa fa-desktop"></i> Data Proyek</a></li>
-                  <li class="<?php echo $active[2]?>"><a href="<?php echo $lvl?>pages/direktur/datapekerjaan"><i class="fa fa-desktop"></i> Data Pekerjaan</a></li>
-                  <li class="<?php echo $active[3]?>"><a href="<?php echo $lvl?>pages/direktur/jadwal"><i class="fa fa-calendar"></i> Jadwal</a></li>
-                  <li class="<?php echo $active[4]?>"><a href="<?php echo $lvl?>pages/direktur/resiko"><i class="fa fa-bug"></i> Resiko</a></li>
-                  <li class="<?php echo $active[5]?>"><a href="<?php echo $lvl?>pages/direktur/biayaresiko"><i class="fa fa-money"></i> Biaya Resiko</a></li>
-                  <li class="<?php echo $active[6]?>"><a href="<?php echo $lvl?>pages/direktur/evaluasi"><i class="fa fa-bar-chart-o"></i> Evaluasi</a></li>
-                  <li class="<?php echo $active[7]?>"><a href="<?php echo $lvl?>pages/direktur/laporan"><i class="fa fa-book"></i> Laporan</a></li>
+                  <li class="<?php echo $active[2]?>"><a href="<?php echo $lvl?>pages/direktur/resiko"><i class="fa fa-bug"></i> Resiko</a></li>
+                  <li class="<?php echo $active[3]?>"><a href="<?php echo $lvl?>pages/direktur/biayaresiko"><i class="fa fa-money"></i> Biaya Resiko</a></li>
+                  <li class="<?php echo $active[4]?>"><a href="<?php echo $lvl?>pages/direktur/evaluasi"><i class="fa fa-bar-chart-o"></i> Evaluasi</a></li>
+                  <li class="<?php echo $active[5]?>"><a href="<?php echo $lvl?>pages/direktur/laporan"><i class="fa fa-book"></i> Laporan</a></li>
                 </ul>
               </div>
 

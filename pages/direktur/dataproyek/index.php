@@ -60,7 +60,6 @@ $active = ['','active','','','','','',''];
        <div class="x_panel">
          <div class="x_title">
            <h2 style="margin-right:20px">Data Proyek</h2>
-           <a href="create"><button class="btn btn-primary">Tambah Data</button></a>
            <ul class="nav navbar-right panel_toolbox">
              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
              </li>
@@ -85,14 +84,14 @@ $active = ['','active','','','','','',''];
                  <th>No</th>
                  <th>Nama Proyek</th>
                  <th>Nama Klien</th>
-                 <th class="text-center">Nomor SPK</th>
-                 <th class="text-center">Status</th>
+                 <th>Nomor SPK</th>
+                 <th>Status</th>
                  <th class="text-center">Action</th>
                </tr>
              </thead>
              <tbody>
                <?php
-                  $sql = "select proyek.id, nama_proyek, nama, no_kontrak, nilai_kontrak, tgl_kontrak, status, tgl_mulai, tgl_selesai, keterangan from proyek inner join klien on klien.id = proyek.id_klien";
+                  $sql = "select proyek.id, nama_proyek, nama, no_kontrak, nilai_kontrak, tgl_kontrak, status, tgl_mulai, tgl_selesai, keterangan from proyek inner join klien on klien.id = proyek.id_klien where status != 'Baru'";
                   $result = mysqli_query($conn, $sql);
                   $i = 1;
                   while ($row = mysqli_fetch_array($result)) {
@@ -118,8 +117,12 @@ $active = ['','active','','','','','',''];
                    ?>
                  </td>
                  <td class="text-center">
-                   <a href="pekerjaan?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Pekerjaan</button></a>
                    <a href="anggaran?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Anggaran</button></a>
+                   <?php if($row['status'] == 'Pengajuan' || $row['status'] == ''){ ?>
+                   <a href="../functions/update_data.php?<?php echo 'id='.$row['id'].'&page=anggaran&function=pengajuan&data=Sedang Berjalan'; ?>"><button class="brn btn-success form-control">Setujui</button></a>
+                   <a href="../functions/update_data.php?<?php echo 'id='.$row['id'].'&page=anggaran&function=pengajuan&data=Revisi'; ?>"><button class="brn btn-warning form-control">Revisi</button></a>
+                   <a href="../functions/update_data.php?<?php echo 'id='.$row['id'].'&page=anggaran&function=pengajuan&data=DiTolak'; ?>"><button class="brn btn-danger form-control">Tolak</button></a>
+                  <?php } ?>
                  </td>
                </tr>
              <?php } ?>

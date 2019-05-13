@@ -1,6 +1,6 @@
 <?php
 $lvl = '../../../';
-$active = ['','','','active','','','',''];
+$active = ['','','active','','','','',''];
 ?>
 
 
@@ -41,16 +41,6 @@ $active = ['','','','active','','','',''];
        <h3>Jadwal</h3>
      </div>
 
-     <div class="title_right">
-       <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-         <div class="input-group">
-           <input type="text" class="form-control" placeholder="Search for...">
-           <span class="input-group-btn">
-             <button class="btn btn-default" type="button">Go!</button>
-           </span>
-         </div>
-       </div>
-     </div>
    </div>
 
    <div class="clearfix"></div>
@@ -59,8 +49,7 @@ $active = ['','','','active','','','',''];
      <div class="col-md-12 col-sm-12 col-xs-12">
        <div class="x_panel">
          <div class="x_title">
-           <h2 style="margin-right:20px">Data Jadwal</h2>
-           <a href="create"><button class="btn btn-primary">Tambah Data</button></a>
+           <h2 style="margin-right:20px">Data Jadwal Proyek</h2>
            <ul class="nav navbar-right panel_toolbox">
              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
              </li>
@@ -79,39 +68,47 @@ $active = ['','','','active','','','',''];
            <div class="clearfix"></div>
          </div>
          <div class="x_content">
-           <table id="datatable" class="table table-striped table-bordered">
+           <table id="datatable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
              <thead>
                <tr>
                  <th>No</th>
                  <th>Nama Proyek</th>
-                 <th>Pemilik Proyek</th>
-                 <th>Nomor SPK</th>
-                 <th>Nilai SPK</th>
-                 <th>Tanggal Mulai</th>
-                 <th>Tanggal Selesai</th>
-                 <th>Durasi</th>
-                 <th>Status</th>
-                 <th>Keterangan</th>
+                 <th>Nama Klien</th>
+                 <th class="text-center">Nomor SPK</th>
+                 <th class="text-center">Status</th>
+                 <th class="text-center">Action</th>
                </tr>
              </thead>
              <tbody>
                <?php
-                  $sql = "select * from proyek";
+                  $sql = "select proyek.id, nama_proyek, nama, no_kontrak, nilai_kontrak, tgl_kontrak, status, tgl_mulai, tgl_selesai, keterangan from proyek inner join klien on klien.id = proyek.id_klien where status = 'Sedang Berjalan'";
                   $result = mysqli_query($conn, $sql);
-                  $i = 0;
+                  $i = 1;
                   while ($row = mysqli_fetch_array($result)) {
                 ?>
                <tr>
                  <td><?php echo $i++; ?></td>
-                 <td><?php echo $row['nama_proyek']; ?></td>
-                 <td><?php echo $row['pemilik_proyek']; ?></td>
-                 <td><?php echo $row['no_spk']; ?></td>
-                 <td><?php echo $row['nilai_kontrak']; ?></td>
-                 <td><?php echo $row['tanggal_mulai']; ?></td>
-                 <td><?php echo $row['tanggal_selesai']; ?></td>
-                 <td><?php echo $row['durasi']; ?></td>
-                 <td><?php echo $row['status']; ?></td>
-                 <td><?php echo $row['keterangan']; ?></td>
+                 <td><a href="detail/?id=<?php echo $row['id']; ?>"><?php echo $row['nama_proyek']; ?></a></td>
+                 <td><?php echo $row['nama']; ?></td>
+                 <td class="text-center"><?php echo $row['no_kontrak']; ?></td>
+                 <td>
+                   <?php
+                   if($row['status'] == 'Baru'){
+                     echo "<p class='alert-warning text-center' style='padding:9px'>Baru</p>";
+                   }elseif ($row['status'] == 'Pengajuan') {
+                     echo "<p class='alert-info text-center' style='padding:9px'>Pengajuan</p>";
+                   }elseif ($row['status'] == 'Sedang Berjalan') {
+                     echo "<p class='alert-success text-center' style='padding:9px'>Sedang Berjalan</p>";
+                   }elseif ($row['status'] == 'Revisi') {
+                     echo "<p class='alert-success text-center' style='padding:9px;background-color:rgba(185, 180, 38, 0.88)'>Revisi</p>";
+                   }elseif ($row['status'] == 'DiTolak') {
+                     echo "<p class='alert-danger text-center' style='padding:9px;'>DiTolak</p>";
+                   }
+                   ?>
+                 </td>
+                 <td class="text-center">
+                   <a href="create?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Jadwal</button></a>
+                 </td>
                </tr>
              <?php } ?>
              </tbody>
