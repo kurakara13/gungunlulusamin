@@ -91,23 +91,23 @@ $active = ['','','','','active','','',''];
                  <td><a href="detail/?id=<?php echo $row['id']; ?>"><?php echo $row['nama_proyek']; ?></a></td>
                  <td><?php echo $row['nama']; ?></td>
                  <td class="text-center"><?php echo $row['no_kontrak']; ?></td>
-                 <td>
+                 <td class="text-center">
                    <?php
                    if($row['status'] == 'Baru'){
-                     echo "<p class='alert-warning text-center' style='padding:9px'>Baru</p>";
+                     echo "<span class='alert-warning text-center' style='padding:9px'>Baru</span>";
                    }elseif ($row['status'] == 'Pengajuan') {
-                     echo "<p class='alert-info text-center' style='padding:9px'>Pengajuan</p>";
+                     echo "<span class='alert-info text-center' style='padding:9px'>Pengajuan</span>";
                    }elseif ($row['status'] == 'Sedang Berjalan') {
-                     echo "<p class='alert-success text-center' style='padding:9px'>Sedang Berjalan</p>";
+                     echo "<span class='alert-success text-center' style='padding:9px'>Sedang Berjalan</span>";
                    }elseif ($row['status'] == 'Revisi') {
-                     echo "<p class='alert-success text-center' style='padding:9px;background-color:rgba(185, 180, 38, 0.88)'>Revisi</p>";
+                     echo "<span class='alert-success text-center' style='padding:9px;background-color:rgba(185, 180, 38, 0.88)'>Revisi</span>";
                    }elseif ($row['status'] == 'DiTolak') {
-                     echo "<p class='alert-danger text-center' style='padding:9px;'>DiTolak</p>";
+                     echo "<span class='alert-danger text-center' style='padding:9px;'>DiTolak</span>";
                    }
                    ?>
                  </td>
                  <td class="text-center">
-                   <a href="create?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Jadwal</button></a>
+                   <a href="create?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Identifikasi Resiko</button></a>
                  </td>
                </tr>
              <?php } ?>

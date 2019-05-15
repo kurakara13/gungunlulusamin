@@ -1,6 +1,6 @@
 <?php
-$lvl = '../../../';
-$active = ['','','','','active','','',''];
+$lvl = '../../../../';
+$active = ['','','','','','active','',''];
 ?>
 
 
@@ -33,14 +33,13 @@ $active = ['','','','','active','','',''];
 
 <?php } ?>
 
-<?php include "../layouts/header.php";?>
+<?php include "../../layouts/header.php";?>
 
  <div class="">
    <div class="page-title">
      <div class="title_left">
-       <h3>Jadwal</h3>
+       <h3>Identifikasi Resiko</h3>
      </div>
-
    </div>
 
    <div class="clearfix"></div>
@@ -49,7 +48,8 @@ $active = ['','','','','active','','',''];
      <div class="col-md-12 col-sm-12 col-xs-12">
        <div class="x_panel">
          <div class="x_title">
-           <h2 style="margin-right:20px">Data Jadwal Proyek</h2>
+           <h2 style="margin-right:20px">Data Resiko</h2>
+           <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-md">Tambah Data</button>
            <ul class="nav navbar-right panel_toolbox">
              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
              </li>
@@ -68,47 +68,27 @@ $active = ['','','','','active','','',''];
            <div class="clearfix"></div>
          </div>
          <div class="x_content">
-           <table id="datatable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+           <table id="datatable" class="table table-striped table-bordered">
              <thead>
                <tr>
                  <th>No</th>
-                 <th>Nama Proyek</th>
-                 <th>Nama Klien</th>
-                 <th class="text-center">Nomor SPK</th>
-                 <th class="text-center">Status</th>
-                 <th class="text-center">Action</th>
+                 <th>Kode Resiko</th>
+                 <th>Nama Resiko</th>
+                 <th>Mitigasi</th>
                </tr>
              </thead>
              <tbody>
                <?php
-                  $sql = "select proyek.id, nama_proyek, nama, no_kontrak, nilai_kontrak, tgl_kontrak, status, tgl_mulai, tgl_selesai, keterangan from proyek inner join klien on klien.id = proyek.id_klien where status = 'Sedang Berjalan'";
+                  $sql = "select * from identifikasi_resiko where id_proyek = '".$_GET['id']."'";
                   $result = mysqli_query($conn, $sql);
                   $i = 1;
                   while ($row = mysqli_fetch_array($result)) {
                 ?>
                <tr>
                  <td><?php echo $i++; ?></td>
-                 <td><a href="detail/?id=<?php echo $row['id']; ?>"><?php echo $row['nama_proyek']; ?></a></td>
-                 <td><?php echo $row['nama']; ?></td>
-                 <td class="text-center"><?php echo $row['no_kontrak']; ?></td>
-                 <td>
-                   <?php
-                   if($row['status'] == 'Baru'){
-                     echo "<p class='alert-warning text-center' style='padding:9px'>Baru</p>";
-                   }elseif ($row['status'] == 'Pengajuan') {
-                     echo "<p class='alert-info text-center' style='padding:9px'>Pengajuan</p>";
-                   }elseif ($row['status'] == 'Sedang Berjalan') {
-                     echo "<p class='alert-success text-center' style='padding:9px'>Sedang Berjalan</p>";
-                   }elseif ($row['status'] == 'Revisi') {
-                     echo "<p class='alert-success text-center' style='padding:9px;background-color:rgba(185, 180, 38, 0.88)'>Revisi</p>";
-                   }elseif ($row['status'] == 'DiTolak') {
-                     echo "<p class='alert-danger text-center' style='padding:9px;'>DiTolak</p>";
-                   }
-                   ?>
-                 </td>
-                 <td class="text-center">
-                   <a href="create?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Jadwal</button></a>
-                 </td>
+                 <td><?php echo $row['kode_resiko']; ?></td>
+                 <td><?php echo $row['nama_resiko']; ?></td>
+                 <td><?php echo $row['mitigasi']; ?></td>
                </tr>
              <?php } ?>
              </tbody>
@@ -116,9 +96,53 @@ $active = ['','','','','active','','',''];
          </div>
        </div>
      </div>
-
-
    </div>
  </div>
 
- <?php include "../layouts/footer.php"; ?>
+ <!-- Small modal -->
+ <div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true">
+   <form class="form-horizontal form-label-left" novalidate action="../../functions/tambah_data.php" method="post">
+     <div class="modal-dialog modal-md">
+       <div class="modal-content">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+           </button>
+           <h4 class="modal-title" id="myModalLabel2">Tambah Identifikasi Resiko</h4>
+         </div>
+         <div class="modal-body">
+           <input type="hidden" name="page" value="identifikasi_resiko">
+           <input name="id_proyek" type="hidden" value="<?php echo $_GET['id'] ?>">
+           <div class="item form-group">
+             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Kode Resiko <span class="required">*</span>
+             </label>
+             <div class="col-md-8 col-sm-8 col-xs-12">
+               <input id="name" class="form-control col-md-7 col-xs-12" name="kode_resiko" placeholder="Nama Uraian" required="required" type="text">
+             </div>
+           </div>
+           <div class="item form-group">
+             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Resiko <span class="required">*</span>
+             </label>
+             <div class="col-md-8 col-sm-8 col-xs-12">
+               <input id="name" class="form-control col-md-7 col-xs-12" name="nama_resiko" placeholder="Nama Uraian" required="required" type="text">
+             </div>
+           </div>
+           <div class="item form-group">
+             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nilai_spk">Mitigasi <span class="required">*</span>
+             </label>
+             <div class="col-md-8 col-sm-8 col-xs-12">
+               <textarea id="name" class="form-control col-md-7 col-xs-12" name="mitigasi" placeholder="Keterangan Uraian" required="required"></textarea>
+             </div>
+           </div>
+           <div class="ln_solid"></div>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+           <button type="submit" class="btn btn-primary">Save changes</button>
+         </div>
+       </div>
+     </div>
+   </form>
+ </div>
+ <!-- /modals -->
+
+ <?php include "../../layouts/footer.php"; ?>

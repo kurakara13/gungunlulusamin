@@ -99,6 +99,21 @@
         echo mysqli_error($conn);
       }
     }
+    else if($_POST['page'] == 'identifikasi_resiko')
+    {
+      $id_proyek = $_POST['id_proyek'];
+      $kode_resiko = $_POST['kode_resiko'];
+      $nama_resiko = $_POST['nama_resiko'];
+      $mitigasi = $_POST['mitigasi'];
+
+      $sql ="INSERT INTO identifikasi_resiko (id_proyek, kode_resiko, nama_resiko, mitigasi)
+                      VALUES ('$id_proyek', '$kode_resiko', '$nama_resiko', '$mitigasi')";
+      if(mysqli_query($conn, $sql)){
+        header("location:../identifikasiresiko/create?id=$id_proyek");
+      }else {
+        echo mysqli_error($conn);
+      }
+    }
   }
 
  ?>
