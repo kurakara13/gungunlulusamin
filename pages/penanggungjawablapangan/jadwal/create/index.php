@@ -37,7 +37,19 @@ $active = ['','','active','','','','',''];
 
 <?php
 
-$resultProyek = mysqli_query($conn, "select * from proyek where id = '".$_GET['id']."'");
+$sqlProyek = "select
+                proyek.id,
+                tgl_selesai,
+                nama_proyek,
+                tgl_mulai,
+                SUM(total_harga) as total_harga
+              from
+                proyek
+              inner join uraian_pekerjaan on uraian_pekerjaan.id_proyek = proyek.id
+            	inner join detail_pekerjaan on detail_pekerjaan.id_uraian = uraian_pekerjaan.id
+            	inner join anggaran on anggaran.id_detail_uraian = detail_pekerjaan.id
+              where proyek.id = '".$_GET['id']."'";
+$resultProyek = mysqli_query($conn, $sqlProyek);
 $rowProyek = mysqli_fetch_array($resultProyek);
 
  ?>
@@ -74,18 +86,13 @@ $rowProyek = mysqli_fetch_array($resultProyek);
            <div class="clearfix"></div>
          </div>
          <div class="x_content">
-           <?php
-           $resultProyek = mysqli_query($conn, "select * from proyek where id = '".$_GET['id']."'");
-           $rowProyek = mysqli_fetch_array($resultProyek);
-
-            ?>
            <table id="datatable" class="table table-striped table-bordered">
              <thead>
                <tr>
-                 <td rowspan="2" class="text-center">No</td>
-                 <td rowspan="2" class="text-center">Uraian Pekerjaan</td>
-                 <td rowspan="2" class="text-center">Total Harga</td>
-                 <td rowspan="2" class="text-center">Bobot (%)</td>
+                 <td class="text-center">No</td>
+                 <td class="text-center">Uraian Pekerjaan</td>
+                 <td class="text-center">Total Harga</td>
+                 <td class="text-center">Bobot (%)</td>
                  <?php
                     $newDate = $rowProyek['tgl_mulai'];
                     $lastDate = $rowProyek['tgl_selesai'];
@@ -105,7 +112,6 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                   ?>
                  <td class="text-center">Action</td>
                </tr>
-               <tr>
                  <?php
                     $newDate = $rowProyek['tgl_mulai'];
                     $lastDate = $rowProyek['tgl_selesai'];
@@ -117,15 +123,13 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                       if($i == 7){
                         $m++;
                   ?>
-                    <td class="text-center"><?php echo date('Y-m-d', strtotime($frontDate . ' -6 day')) ;?> - <?php echo $newDate; ?></td>
+                    <?php $dataTanggal[] = date('Y-m-d', strtotime($frontDate . ' -6 day')).' - '.$newDate; ?>
                     <?php
                     $i = 0;
                   }
                   $newDate = date('Y-m-d', strtotime($newDate . ' +1 day'));
                   }
                   ?>
-                 <td class="text-center"></td>
-               </tr>
              </thead>
              <tbody>
                <?php
@@ -138,8 +142,8 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                <tr>
                  <th style="width:5%" class="text-center"></th>
                  <th style="width:15%"><?php echo $row['nama_uraian']; ?></th>
+                 <th style="width:15%"></th>
                  <th style="width:10%"></th>
-                 <th style="width:12%"></th>
                  <?php
                     $newDate = $rowProyek['tgl_mulai'];
                     $lastDate = $rowProyek['tgl_selesai'];
@@ -162,7 +166,7 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                  </td>
                </tr>
                <?php
-                  $sqlDetail = "select * from detail_pekerjaan where id_uraian = '".$row['id']."'";
+                  $sqlDetail = "select detail_pekerjaan.id, id_uraian, detail_pekerjaan, tgl_mulai, tgl_selesai from detail_pekerjaan left join jadwal on jadwal.id_detail_uraian = detail_pekerjaan.id where id_uraian = '".$row['id']."'";
                   $resultDetail = mysqli_query($conn, $sqlDetail);
                   $i = 1;
                   $total = 0;
@@ -183,24 +187,25 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                   <td>Rp.
                     <?php
                     if(isset($rowAnggalan['harga_satuan'])){
-                      echo number_format($rowAnggalan['harga_satuan']);
+                      echo number_format($rowAnggalan['total_harga']);
                     }else {
                       echo "0";
                     }
                     ?>
                   </td>
-                  <td>Rp. <?php echo number_format($rowAnggalan['total_harga']); ?></td>
+                  <td class="text-center"> <?php echo number_format((($rowAnggalan['total_harga']/$rowProyek['total_harga'])*100),2); ?> %</td>
                   <?php
                      $newDate = $rowProyek['tgl_mulai'];
                      $lastDate = $rowProyek['tgl_selesai'];
                      $i = 0;
                      $m = 0;
                      while ($newDate != $lastDate) {
+                       $frontDate = $newDate;
                        $i++;
                        if($i == 7){
                          $m++;
                    ?>
-                     <td class="text-center"></td>
+                     <td class="text-center" <?php if(date('Y-m-d', strtotime($frontDate . ' -6 day')) == $rowDetail['tgl_mulai'] || $newDate == $rowDetail['tgl_selesai']){echo "style='background-color:yellow'";} ?>></td>
                      <?php
                      $i = 0;
                    }
@@ -209,13 +214,47 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                    ?>
                   <td class="text-center">
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target=".bs-example-modal-md-detail"
-                    onclick="editDetail('<?php echo $rowAnggalan['id'] ?>', '<?php echo $rowDetail['detail_pekerjaan'] ?>', '<?php echo $rowAnggalan['volume'] ?>', '<?php echo $rowAnggalan['satuan'] ?>', '<?php echo $rowAnggalan['harga_satuan'] ?>')">Atur Jadwal</button>
+                    onclick="aturJadwal('<?php echo $rowDetail['id'] ?>', '<?php echo $rowDetail['detail_pekerjaan'] ?>')">Atur Jadwal</button>
                   </td>
                 </tr>
                 <?php } ?>
              <?php } ?>
              </tbody>
            </table>
+         </div>
+       </div>
+     </div>
+     <div class="col-md-12 col-sm-12 col-xs-12">
+       <div class="x_panel">
+         <div class="x_title">
+           <h2 style="margin-right:20px">Keterangan Minggu</h2>
+           <ul class="nav navbar-right panel_toolbox">
+             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+             </li>
+             <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+               <ul class="dropdown-menu" role="menu">
+                 <li><a href="#">Settings 1</a>
+                 </li>
+                 <li><a href="#">Settings 2</a>
+                 </li>
+               </ul>
+             </li>
+             <li><a class="close-link"><i class="fa fa-close"></i></a>
+             </li>
+           </ul>
+           <div class="clearfix"></div>
+         </div>
+         <div class="x_content">
+           <table class="table" style="width:30%">
+             <?php $a=1; for ($i=0; $i < count($dataTanggal); $i++) { ?>
+             <tr>
+               <th><?php echo "M".$a++; ?></th>
+               <td>: <?php echo $dataTanggal[$i]; ?></td>
+             </tr>
+             <?php } ?>
+           </table>
+
          </div>
        </div>
      </div>
@@ -233,9 +272,8 @@ $rowProyek = mysqli_fetch_array($resultProyek);
             <h4 class="modal-title" id="myModalLabel2">Buat Anggaran</h4>
           </div>
           <div class="modal-body">
-            <input type="hidden" name="page" value="anggaran_pekerjaan">
-            <input type="hidden" name="function" value="update">
-            <input type="hidden" name="id_uraian" id="id-uraian">
+            <input type="hidden" name="page" value="jadwal">
+            <input type="hidden" name="id_detail" id="id-detail">
             <div class="item form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Detail Pekerjaan <span class="required">*</span>
               </label>
@@ -244,22 +282,27 @@ $rowProyek = mysqli_fetch_array($resultProyek);
               </div>
             </div>
             <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Volume <span class="required">*</span>
-              </label>
-              <div class="col-md-3 col-sm-3 col-xs-12">
-                <input id="volume" class="form-control col-md-7 col-xs-12" name="volume" placeholder="Volume" required="required" type="number">
-              </div>
-              <label class="control-label col-md-2 col-sm-2 col-xs-12" for="name">Satuan <span class="required">*</span>
-              </label>
-              <div class="col-md-3 col-sm-3 col-xs-12">
-                <input id="satuan" class="form-control col-md-7 col-xs-12" name="satuan" placeholder="Satuan" required="required" type="text">
-              </div>
-            </div>
-            <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Harga <span class="required">*</span>
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Minggu <span class="required">*</span>
               </label>
               <div class="col-md-8 col-sm-8 col-xs-12">
-                <input id="harga" class="form-control col-md-7 col-xs-12" name="harga" placeholder="Harga" required="required" type="number">
+                <table class="table table-bordered" id="table-Minggu">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Minggu</th>
+                      <th>Tanggal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php $a=1; for ($i=0; $i < count($dataTanggal); $i++) { ?>
+                    <tr>
+                      <th><input type="checkbox" name="minggu[]" value="<?php echo $dataTanggal[$i]; ?>"></th>
+                      <th><?php echo "M".$a++; ?></th>
+                      <td>: <?php echo $dataTanggal[$i]; ?></td>
+                    </tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
               </div>
             </div>
             <div class="ln_solid"></div>
@@ -278,14 +321,6 @@ $rowProyek = mysqli_fetch_array($resultProyek);
  <?php include "../../layouts/footer.php"; ?>
 
  <script>
- function editDetail(id_uraian, detail_pekerjaan, volume, satuan, harga){
-   $('#nama_detial_uraian').val(detail_pekerjaan);
-   $('#volume').val(volume);
-   $('#satuan').val(satuan);
-   $('#harga').val(harga);
-   $('#id-uraian').val(id_uraian);
- }
-
  $('#detail-modal').on('hidden.bs.modal', function () {
    $('#nama_detial_uraian').val(null);
    $('#volume').val(null);
@@ -293,4 +328,9 @@ $rowProyek = mysqli_fetch_array($resultProyek);
    $('#harga').val(null);
    $('#id-uraian').val(null);
   })
+
+  function aturJadwal(id_detail, nama_detail){
+    $('#id-detail').val(id_detail);
+    $('#nama_detial_uraian').val(nama_detail);
+  }
  </script>

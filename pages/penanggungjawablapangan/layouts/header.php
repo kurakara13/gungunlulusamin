@@ -71,11 +71,13 @@
                 <ul class="nav side-menu">
                   <li class="<?php echo $active[0]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/"><i class="fa fa-home"></i> Dashboard </a></li>
                   <li class="<?php echo $active[1]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/dataproyek"><i class="fa fa-desktop"></i> Data Proyek</a></li>
-                  <li class="<?php echo $active[2]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/jadwal"><i class="fa fa-calendar"></i> Jadwal</a></li>
-                  <li class="<?php echo $active[3]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/resiko"><i class="fa fa-bug"></i> Resiko</a></li>
-                  <li class="<?php echo $active[4]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/biayaresiko"><i class="fa fa-money"></i> Biaya Resiko</a></li>
-                  <li class="<?php echo $active[5]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/evaluasi"><i class="fa fa-bar-chart-o"></i> Evaluasi</a></li>
-                  <li class="<?php echo $active[6]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/laporan"><i class="fa fa-book"></i> Laporan</a></li>
+                  <li class="<?php echo $active[2]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/datapekerjaan"><i class="fa fa-star"></i> Data Pekerjaan</a></li>
+                  <li class="<?php echo $active[3]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/anggaran"><i class="fa fa-star"></i> Anggaran</a></li>
+                  <li class="<?php echo $active[4]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/jadwal"><i class="fa fa-calendar"></i> Jadwal</a></li>
+                  <li class="<?php echo $active[5]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/resiko"><i class="fa fa-bug"></i> Resiko</a></li>
+                  <li class="<?php echo $active[6]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/biayaresiko"><i class="fa fa-money"></i> Biaya Resiko</a></li>
+                  <li class="<?php echo $active[7]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/evaluasi"><i class="fa fa-bar-chart-o"></i> Evaluasi</a></li>
+                  <li class="<?php echo $active[8]?>"><a href="<?php echo $lvl?>pages/penanggungjawablapangan/laporan"><i class="fa fa-book"></i> Laporan</a></li>
                 </ul>
               </div>
 

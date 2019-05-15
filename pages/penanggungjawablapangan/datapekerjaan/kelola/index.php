@@ -1,6 +1,6 @@
 <?php
 $lvl = '../../../../';
-$active = ['','active','','','','','',''];
+$active = ['','','active','','','','',''];
 ?>
 
 
@@ -113,7 +113,7 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                   <td><?php echo $rowDetail['detail_pekerjaan']; ?></td>
                   <td class="text-center">
                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target=".bs-example-modal-md-detail"
-                    onclick="editDetail('<?php echo $rowDetail['id'] ?>', '<?php echo $rowDetail['detail_pekerjaan'] ?>', '<?php echo $rowDetail['volume'] ?>', '<?php echo $rowDetail['satuan'] ?>', '<?php echo $rowDetail['harga'] ?>')">Edit Detail</button>
+                    onclick="editDetail('<?php echo $rowDetail['id'] ?>', '<?php echo $rowDetail['detail_pekerjaan'] ?>')">Edit Detail</button>
                   </td>
                 </tr>
                 <?php } ?>
@@ -139,7 +139,6 @@ $rowProyek = mysqli_fetch_array($resultProyek);
           </div>
           <div class="modal-body">
             <input type="hidden" name="page" value="uraian_pekerjaan">
-            <input type="hidden" name="function" value="create">
             <input type="hidden" name="id_proyek" value="<?php echo $_GET['id'] ?>">
             <div class="item form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Nama Uraian <span class="required">*</span>
@@ -170,7 +169,7 @@ $rowProyek = mysqli_fetch_array($resultProyek);
 
   <!-- Small modal -->
   <div class="modal fade bs-example-modal-md-detail" id="detail-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form class="form-horizontal form-label-left" novalidate action="../../functions/tambah_data.php?id=<?php echo $_GET['id']?>" method="post">
+    <form class="form-horizontal form-label-left" id="detial-modal-form" novalidate action="../../functions/tambah_data.php?id=<?php echo $_GET['id']?>" method="post">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <div class="modal-header">
@@ -180,7 +179,6 @@ $rowProyek = mysqli_fetch_array($resultProyek);
           </div>
           <div class="modal-body">
             <input type="hidden" name="page" value="detail_uraian_pekerjaan">
-            <input type="hidden" name="function" id="function-detail" value="create">
             <input type="hidden" name="id_uraian" id="id-uraian">
             <div class="item form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Detail Pekerjaan <span class="required">*</span>
@@ -189,25 +187,6 @@ $rowProyek = mysqli_fetch_array($resultProyek);
                 <input id="nama_detial_uraian" class="form-control col-md-8 col-xs-12" name="nama_detial_uraian" placeholder="Nama Uraian" required="required" type="text">
               </div>
             </div>
-            <!-- <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Volume <span class="required">*</span>
-              </label>
-              <div class="col-md-3 col-sm-3 col-xs-12">
-                <input id="volume" class="form-control col-md-7 col-xs-12" name="volume" placeholder="Volume" required="required" type="number">
-              </div>
-              <label class="control-label col-md-2 col-sm-2 col-xs-12" for="name">Satuan <span class="required">*</span>
-              </label>
-              <div class="col-md-3 col-sm-3 col-xs-12">
-                <input id="satuan" class="form-control col-md-7 col-xs-12" name="satuan" placeholder="Satuan" required="required" type="text">
-              </div>
-            </div>
-            <div class="item form-group">
-              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Harga <span class="required">*</span>
-              </label>
-              <div class="col-md-8 col-sm-8 col-xs-12">
-                <input id="harga" class="form-control col-md-7 col-xs-12" name="harga" placeholder="Harga" required="required" type="number">
-              </div>
-            </div> -->
             <div class="ln_solid"></div>
           </div>
           <div class="modal-footer">
@@ -224,22 +203,17 @@ $rowProyek = mysqli_fetch_array($resultProyek);
  <?php include "../../layouts/footer.php"; ?>
 
  <script>
- function editDetail(id_detail, detail_pekerjaan, volume, satuan, harga){
+ function editDetail(id_detail, detail_pekerjaan){
+   $('#id-uraian').val(id_detail);
    $('#nama_detial_uraian').val(detail_pekerjaan);
-   $('#volume').val(volume);
-   $('#satuan').val(satuan);
-   $('#harga').val(harga);
-   $('#id_detail').val(id_detail);
-   $('#function-detail').val('update');
+   let action = $('#detial-modal-form').attr('action').replace('tambah', 'update');
+   $('#detial-modal-form').attr('action', ''+action);
  }
 
  $('#detail-modal').on('hidden.bs.modal', function () {
-   console.log('jihad');
+   $('#id-uraian').val(null);
    $('#nama_detial_uraian').val(null);
-   $('#volume').val(null);
-   $('#satuan').val(null);
-   $('#harga').val(null);
-   $('#id_detail').val(null);
-   $('#function-detail').val('create');
+   let action = $('#detial-modal-form').attr('action').replace('update', 'tambah');
+   $('#detial-modal-form').attr('action', ''+action);
   })
  </script>

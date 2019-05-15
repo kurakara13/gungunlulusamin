@@ -3,6 +3,7 @@ $lvl = '../../../';
 $active = ['','','active','','','','',''];
 ?>
 
+
 <?php function css($lvl){ ?>
     <!-- Datatables -->
     <link href="<?php echo $lvl?>assets/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
@@ -37,7 +38,7 @@ $active = ['','','active','','','','',''];
  <div class="">
    <div class="page-title">
      <div class="title_left">
-       <h3>Pekerjaan</h3>
+       <h3>Proyek</h3>
      </div>
 
      <div class="title_right">
@@ -58,8 +59,7 @@ $active = ['','','active','','','','',''];
      <div class="col-md-12 col-sm-12 col-xs-12">
        <div class="x_panel">
          <div class="x_title">
-           <h2 style="margin-right:20px">Data Pekerjaan</h2>
-           <a href="create"><button class="btn btn-primary">Tambah Data</button></a>
+           <h2 style="margin-right:20px">Data Proyek</h2>
            <ul class="nav navbar-right panel_toolbox">
              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
              </li>
@@ -78,37 +78,61 @@ $active = ['','','active','','','','',''];
            <div class="clearfix"></div>
          </div>
          <div class="x_content">
-           <table id="datatable" class="table table-striped table-bordered">
+           <table id="datatable" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
              <thead>
                <tr>
                  <th>No</th>
                  <th>Nama Proyek</th>
-                 <th>Pemilik Proyek</th>
-                 <th>Nomor SPK</th>
-                 <th>Nilai SPK</th>
-                 <th>Tanggal Mulai</th>
-                 <th>Tanggal Selesai</th>
-                 <th>Durasi</th>
-                 <th>Keterangan</th>
+                 <th class="text-center">Jumlah Uraian Pekerjaan</th>
+                 <th class="text-center">Jumlah Detail Pekerjaan</th>
+                 <th class="text-center">Status</th>
+                 <th class="text-center">Action</th>
                </tr>
              </thead>
              <tbody>
                <?php
-                  $sql = "select * from proyek";
+                  $sql = "select
+                            proyek.id,
+                            nama_proyek,
+                            status,
+                            COUNT(distinct uraian_pekerjaan.id) AS jumlah_uraian_pekerjaan,
+                            COUNT(detail_pekerjaan.id) AS jumlah_detail_pekerjaan
+                          from proyek
+                            left join uraian_pekerjaan on uraian_pekerjaan.id_proyek = proyek.id
+                            left join detail_pekerjaan on detail_pekerjaan.id_uraian = uraian_pekerjaan.id
+                           GROUP BY
+                           	proyek.id";
+
                   $result = mysqli_query($conn, $sql);
-                  $i = 0;
+                  if(!$result){
+                    echo mysqli_error($conn);
+                  }
+                  $i = 1;
                   while ($row = mysqli_fetch_array($result)) {
                 ?>
                <tr>
                  <td><?php echo $i++; ?></td>
-                 <td><?php echo $row['nama_proyek']; ?></td>
-                 <td><?php echo $row['pemilik_proyek']; ?></td>
-                 <td><?php echo $row['no_spk']; ?></td>
-                 <td><?php echo $row['nilai_kontrak']; ?></td>
-                 <td><?php echo $row['tanggal_mulai']; ?></td>
-                 <td><?php echo $row['tanggal_selesai']; ?></td>
-                 <td><?php echo $row['durasi']; ?></td>
-                 <td><?php echo $row['keterangan']; ?></td>
+                 <td><a href="detail/?id=<?php echo $row['id']; ?>"><?php echo $row['nama_proyek']; ?></a></td>
+                 <td class="text-center"><?php echo $row['jumlah_uraian_pekerjaan'] ?></td>
+                 <td class="text-center"><?php echo $row['jumlah_detail_pekerjaan'] ?></td>
+                 <td>
+                   <?php
+                   if($row['status'] == 'Baru'){
+                     echo "<p class='alert-warning text-center' style='padding:9px'>Baru</p>";
+                   }elseif ($row['status'] == 'Pengajuan') {
+                     echo "<p class='alert-info text-center' style='padding:9px'>Pengajuan</p>";
+                   }elseif ($row['status'] == 'Sedang Berjalan') {
+                     echo "<p class='alert-success text-center' style='padding:9px'>Berjalan</p>";
+                   }elseif ($row['status'] == 'Revisi') {
+                     echo "<p class='alert-success text-center' style='padding:9px;background-color:rgba(185, 180, 38, 0.88)'>Revisi</p>";
+                   }elseif ($row['status'] == 'DiTolak') {
+                     echo "<p class='alert-danger text-center' style='padding:9px;'>DiTolak</p>";
+                   }
+                   ?>
+                 </td>
+                 <td class="text-center">
+                   <a href="kelola?id=<?php echo $row['id']; ?>"><button class="brn btn-default form-control">Kelola Pekerjaan</button></a>
+                 </td>
                </tr>
              <?php } ?>
              </tbody>
